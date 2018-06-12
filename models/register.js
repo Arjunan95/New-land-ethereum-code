@@ -20,7 +20,7 @@ usertype:String
 mongoose.Promise = global.Promise;
 //mongoose.connect('mongodb://localhost:27017/digitalId', { useMongoClient: true });
 
-mongoose.connect('mongodb://Arjunan:Arjunan24@ds231360.mlab.com:31360/login', {
+mongoose.connect('mongodb://ethereum:ethereum@123@ds231360.mlab.com:31360/login', {
     useMongoClient: true
 });
 

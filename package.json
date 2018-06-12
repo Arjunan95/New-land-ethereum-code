@@ -43,7 +43,19 @@
     "tunnel-agent": "^0.6.0",
     "underscore": "^1.8.3",
     "uuid": "^2.0.2",
-    "web3": "^0.19.1",
+    "web3": "github:ethereum/web3.js",
     "web3-js": "^1.0.5-beta.26"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arjunan95/land-reg-sample-01.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Arjunan95/land-reg-sample-01/issues"
+  },
+  "homepage": "https://github.com/Arjunan95/land-reg-sample-01#readme",
+  "description": ""
 }
