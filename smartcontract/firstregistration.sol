@@ -1,22 +1,33 @@
-pragma solidity ^0.4.0;
+ pragma solidity ^0.4.0;
 
-contract landRegistry {
+ contract landRegistry {
      
+      struct landdetails
+    {
       string name;
       uint32 aadharno;
       uint32 phoneno;
+      uint32 propertyId;
+    }
+      
 
-//  mapping(bytes32 => firstregistration) public firstregistrations;
+ mapping(uint32 => landdetails) public landreg;
  
- function newland( string _name, uint32 _aadharno, uint32 _phoneno) public  {
-
-  name=_name;
-  aadharno=_aadharno;
-  phoneno=_phoneno;
- }
- 
- function getfirstRegistrationDetails() public constant returns (string,uint32,uint32) {
-     return (name,aadharno,phoneno);
+ function newlandreg(uint32 _propertyId,string _name, uint32 _aadharno, uint32 _phoneno) public  {
      
-}
+     landreg[_propertyId].name = _name;
+     landreg[_propertyId].aadharno = _aadharno;
+     landreg[_propertyId].phoneno = _phoneno;
+  
+ 
  }
+ 
+  function getMessageByIndex(uint32 _propertyId) constant returns (string, uint32,uint32)
+    
+    {
+        
+        return (landreg[_propertyId].name, landreg[_propertyId].aadharno,landreg[_propertyId].phoneno);
+    }
+ 
+ 
+}

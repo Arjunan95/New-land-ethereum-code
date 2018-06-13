@@ -21,6 +21,10 @@ var multipartMiddleware = multipart();
 const nodemailer = require('nodemailer');
 var express = require('express');
 var router = express.Router();
+var ipfsAPI = require('ipfs-api');
+var output;
+var ipfs = ipfsAPI('localhost', 5001)
+var fs=require("fs");
 
 
 
@@ -38,35 +42,14 @@ web3.eth.defaultAccount = web3.eth.accounts[0];
 
 var CoursetroContract = web3.eth.contract([
 	{
-		"constant": false,
+		"constant": true,
 		"inputs": [
-			{
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"name": "_aadharno",
-				"type": "uint32"
-			},
-			{
-				"name": "_phoneno",
-				"type": "uint32"
-			},
 			{
 				"name": "_propertyId",
 				"type": "uint32"
 			}
 		],
-		"name": "newlandreg",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getfirstRegistrationDetails",
+		"name": "getFirstReg",
 		"outputs": [
 			{
 				"name": "",
@@ -79,14 +62,67 @@ var CoursetroContract = web3.eth.contract([
 			{
 				"name": "",
 				"type": "uint32"
-			},
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
 			{
 				"name": "",
 				"type": "uint32"
 			}
 		],
+		"name": "landreg",
+		"outputs": [
+			{
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"name": "aadharno",
+				"type": "uint32"
+			},
+			{
+				"name": "phoneno",
+				"type": "uint32"
+			},
+			{
+				"name": "propertyId",
+				"type": "uint32"
+			}
+		],
 		"payable": false,
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_propertyId",
+				"type": "uint32"
+			},
+			{
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"name": "_aadharno",
+				"type": "uint32"
+			},
+			{
+				"name": "_phoneno",
+				"type": "uint32"
+			}
+		],
+		"name": "newlandreg",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ])
@@ -110,10 +146,22 @@ module.exports = router => {
        var possible = "0123456789674736728367382772898366377267489457636736273448732432642326734"
        for (var i = 0; i < 5; i++)
 	   propertyId += (possible.charAt(Math.floor(Math.random() * possible.length))).toString();
-       console.log("propertyId : " + propertyId)
-  
+	   console.log("propertyId : " + propertyId)
+
+	   fs.readFile('/home/arjuns/Pictures/55031.jpg',function(err,data){
+		var file1= data;
+		console.log(file1)
+ipfs.files.add(data, (err, result) => { // Upload buffer to IPFS
+if(err) {
+  console.error(err)
+  return
+}
+let url = `https://ipfs.io/ipfs/${result[0].hash}`
+//https://ipfs.io/ipfs/
+console.log("url",url)
+
   console.log("123")
-  Coursetro.newlandreg(_name,_aadharno,_phoneno,propertyId,{
+  Coursetro.newlandreg(propertyId,_name,_aadharno,_phoneno,{
         from: web3.eth.accounts[0],
 		 gas: 4779969,
 		
@@ -121,7 +169,7 @@ module.exports = router => {
 
 	 console.log("arjun")    
 res.send ({
-  message:"Sucessfully stored in Ethereum Ledger",
+  message:"Your Property Number Is :"+ propertyId,
   status :"True"
 })
 
@@ -129,13 +177,18 @@ res.send ({
 
 
 })
+}
+)
+	   })
 
 
- router.get('/gf', cors(), (req, res) => {
-	var propertyno=req.body.propertyId
-	console.log("Current Owner Details:",propertyno);
+ router.post('/gf', cors(), (req, res) => {
+	 console.log("Enter your Pid Num")
 
-  Coursetro.getfirstRegistrationDetails(propertyno, function(error, result) {            
+	var propertyId=req.body.propertyId
+	console.log("Current Owner Details:",propertyId);
+
+  Coursetro.getFirstReg(propertyId, function(error, result) {            
   {
       // $("#get").html(result[0]+' ('+result[1]+' years old)');
       console.log(result);
@@ -148,4 +201,5 @@ res.send ({
 })
 
 })
+
 }
